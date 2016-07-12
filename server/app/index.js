@@ -10,11 +10,10 @@ var User = require('../api/users/user.model');
 //var urlencodedParser = bodyParser.urlencoded({extended:false});
 //app.use(bodyParser.urlencoded({extended:false}));
 
+
 app.use(require('./logging.middleware'));
 
 app.use(require('./request-state.middleware'));
-
-app.use(require('./statics.middleware'));
 
 app.use(session({
   secret: 'tongiscool'
@@ -24,6 +23,8 @@ app.use(function (req, res, next) {
   console.log('session', req.session);
   next();
 });
+
+app.use(require('./statics.middleware'));
 
 app.use('/api', function (req, res, next) {
   if (!req.session.counter) req.session.counter = 0;
@@ -45,18 +46,23 @@ app.post('/login', function (req, res, next) {
   User.findOne({where: req.body})
   .then(function (user) {
     if (!user) {
-      res.status(401).send();
+      res.sendStatus(401);
     }
     else {
       req.session.user = user;
-      req.session.userId = user.id;
-      res.status.send();
+      res.status(200);
+      res.send(user);
     }
 
   })
   .catch(next);
+})
 
-
+app.get('/logout', function (req, res, next) {
+  console.log('is it working');
+  req.session.user = null;
+  req.session.userId = null;
+  res.sendStatus(200);
 })
 
 app.use(require('./error.middleware'));

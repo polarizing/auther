@@ -3,7 +3,7 @@
 var app = require('./app');
 var db = require('./db');
 
-var port = 8080;
+var port = 8082;
 var server = app.listen(port, function (err) {
   if (err) throw err;
   console.log('HTTP server patiently listening on port', port);
