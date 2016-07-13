@@ -1,6 +1,6 @@
 'use strict';
 
-app.directive('userItem', function () {
+app.directive('userItem', function (AuthFactory) {
   return {
     restrict: 'E',
     templateUrl: '/browser/app/user/item/user.item.html',
@@ -20,11 +20,19 @@ app.directive('userItem', function () {
           else scope.user.save();
         }, true);
       }
+
       scope.removeUser = function () {
         scope.user.destroy()
         .then(function () {
           scope.afterRemove();
         });
+      };
+      
+      scope.editable = function () {
+        var user = AuthFactory.getCurrentUser()
+        if(!user) return false;
+        return user.isAdmin || scope.user.id === user.id
+
       };
     }
   }

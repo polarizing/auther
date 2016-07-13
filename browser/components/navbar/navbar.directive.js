@@ -14,6 +14,9 @@ app.directive('navbar', function ($state, $location, AuthFactory) {
       scope.logout = function () {
         AuthFactory.logout();
       }
+      scope.isLoggedIn = function() {
+        return AuthFactory.getCurrentUser();
+      }
     }
   }
 });
